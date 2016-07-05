@@ -54,6 +54,7 @@ package jsonapi
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -76,6 +77,7 @@ func (f HTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	d := json.NewDecoder(r.Body)
 	w.Header().Add("Content-Type", "application/json")
 	f(e, d, h)
+	ioutil.ReadAll(r.Body) // drain data to enable socket reuse
 }
 
 // HandleFunc wraps our json api handler to http.Handle
