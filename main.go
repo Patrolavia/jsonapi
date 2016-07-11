@@ -77,7 +77,9 @@ func (f HTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	d := json.NewDecoder(r.Body)
 	w.Header().Add("Content-Type", "application/json")
 	f(e, d, h)
-	ioutil.ReadAll(r.Body) // drain data to enable socket reuse
+	if r.Body != nil {
+		ioutil.ReadAll(r.Body) // drain data to enable socket reuse
+	}
 }
 
 // HandleFunc wraps our json api handler to http.Handle
